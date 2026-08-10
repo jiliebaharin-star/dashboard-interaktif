@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import * as XLSX from 'xlsx'
 import { Upload, Download, ShieldCheck, CheckCircle2 } from 'lucide-react'
+import '../globals.css'
+import './admin.css'
 
 const TEMPLATE=[['Bulan','Peminjam','Pengunjung','View MyFoto'],['Jan',128,420,980],['Feb',146,468,1120],['Mac',162,512,1290],['Apr',151,486,1210],['Mei',178,555,1450],['Jun',194,603,1680],['Jul',216,648,1890],['Ogos',231,702,2140]]
 
