@@ -31,20 +31,22 @@ export default function Page() {
   const [score,setScore] = useState(0)
   const [picked,setPicked] = useState<number|null>(null)
   const [quizOptions,setQuizOptions] = useState<string[][]>([])
+  const [correctAnswers,setCorrectAnswers] = useState<string[]>([])
 
   const filtered = data.filter(x => cat === 'Semua' || x.cat === cat || (cat === 'Keluarga' && x.cat === 'Semua'))
 
   function start(){
     setQ(0); setScore(0); setPicked(null)
     setQuizOptions(questions.map(item => shuffle([...item[1]])))
+    setCorrectAnswers(questions.map(item => item[1][item[2]]))
     setMode('quiz')
   }
 
   function answer(i:number){
     if(picked !== null) return
-    const correct = quizOptions[q][0]
+    const correct = correctAnswers[q]
     setPicked(i)
-    if(quizOptions[q][i] === correct) setScore(s=>s+1)
+    if(quizOptions[q]?.[i] === correct) setScore(s=>s+1)
   }
 
   function next(){
@@ -55,8 +57,8 @@ export default function Page() {
 
   if(mode === 'quiz'){
     const item=questions[q]
-    const options=quizOptions[q] || item[1]
-    const correct=options[0]
+    const options=quizOptions[q] || []
+    const correct=correctAnswers[q]
     return <main className="simple-app"><div className="simple-card">
       <button className="simple-back" onClick={()=>setMode('home')}>← Kembali</button>
       <p className="eyebrow">QUIZ INISIATIF KERAJAAN</p>
@@ -64,7 +66,7 @@ export default function Page() {
       <div className="quiz-progress"><span style={{width:`${((q+1)/questions.length)*100}%`}} /></div>
       <h1>{item[0]}</h1>
       <div className="answers">{options.map((x,i)=><button key={x} onClick={()=>answer(i)} className={picked===i ? (x===correct?'right':'wrong') : ''}>{x}</button>)}</div>
-      {picked !== null && <p className="feedback">{picked===options.indexOf(correct)?'✅ Jawapan tepat!':'❌ Jawapan kurang tepat.'}</p>}
+      {picked !== null && <p className="feedback">{options[picked]===correct?'✅ Jawapan tepat!':'❌ Jawapan kurang tepat.'}</p>}
       <button className="simple-primary" disabled={picked===null} onClick={next}>{q===questions.length-1?'Lihat Keputusan':'Soalan Seterusnya →'}</button>
     </div></main>
   }
