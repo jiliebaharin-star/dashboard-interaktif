@@ -1,5 +1,7 @@
 'use client'
 
+import './inisiatif.css'
+
 import { useMemo, useState } from 'react'
 import { ArrowLeft, ArrowRight, Award, CheckCircle2, ChevronRight, Search, Sparkles, Trophy, Users } from 'lucide-react'
 
