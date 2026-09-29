@@ -3,7 +3,7 @@
 import './inisiatif.css'
 
 import { useMemo, useState } from 'react'
-import { ArrowLeft, ArrowRight, Award, CheckCircle2, ChevronRight, Search, Sparkles, Trophy, Users } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronRight, Search } from 'lucide-react'
 
 type Initiative = { title:string; category:string; description:string; tags:string[]; link:string }
 type Question = { text:string; options:string[]; answer:number; explanation:string }
@@ -54,32 +54,32 @@ function Home({profile,setProfile,startQuiz,discover}:{profile:string;setProfile
  return <div className="ia-page">
   <div className="ia-hero">
    <div className="ia-brand"><span className="ia-logo">MY</span><span>KENALI INISIATIF<br/><b>KERAJAAN</b></span></div>
-   <span className="ia-spark"><Sparkles size={17}/></span>
+   <span className="ia-spark">✨</span>
    <p className="ia-kicker">MAKLUMAT • SEMAK • FAHAM</p>
    <h1>Apa yang anda<br/><em>perlukan?</em></h1>
    <p className="ia-lead">Temui inisiatif kerajaan melalui soalan ringkas dan carian mengikut situasi kehidupan anda.</p>
   </div>
-  <section className="ia-section"><h2>Pilih kategori anda</h2><div className="profile-grid">{profiles.map(p=><button key={p} className={profile===p?'profile active':'profile'} onClick={()=>setProfile(p)}>{p}</button>)}</div></section>
-  <section className="ia-actions"><button className="primary-btn" onClick={startQuiz}><span><Trophy size={20}/> Mula Quiz</span><ChevronRight/></button><button className="secondary-btn" onClick={discover}><Search size={19}/> Cari Inisiatif</button></section>
-  <div className="ia-trust"><Users size={17}/> Direka untuk memudahkan rakyat mencari maklumat yang relevan</div>
+  <section className="ia-section"><h2>Pilih kategori anda</h2><div className="profile-grid">{profiles.map(p=><button key={p} className={profile===p?'profile active':'profile'} onClick={()=>setProfile(p)}>{p==='Semua'?'🇲🇾':p==='Pelajar'?'🎓':p==='Keluarga'?'👨‍👩‍👧':p==='Pekerja'?'💼':'🏪'}<span>{p}</span></button>)}</div></section>
+  <section className="ia-actions"><button className="primary-btn" onClick={startQuiz}><span>🎯 Mula Quiz</span><ChevronRight/></button><button className="secondary-btn" onClick={discover}>🔎 Cari Inisiatif</button></section>
+  <div className="ia-trust">🇲🇾 Direka untuk memudahkan rakyat mencari maklumat yang relevan</div>
  </div>
 }
 
 function Quiz({q,score,selected,choose,next}:{q:number;score:number;selected:number|null;choose:(i:number)=>void;next:()=>void}){
  const item=questions[q]
  return <div className="ia-page quiz-page">
-  <div className="quiz-top"><button className="back-btn" onClick={()=>location.reload()}><ArrowLeft size={19}/></button><div><b>Kenali Inisiatif</b><small>Soalan {q+1} daripada {questions.length}</small></div><span className="score-pill">{score} mata</span></div>
+  <div className="quiz-top"><button className="back-btn" onClick={()=>location.reload()}>←</button><div><b>Kenali Inisiatif</b><small>Soalan {q+1} daripada {questions.length}</small></div><span className="score-pill">⭐ {score}</span></div>
   <div className="progress"><span style={{width:`${((q+1)/questions.length)*100}%`}}/></div>
-  <div className="question-card"><span className="question-no">0{q+1}</span><h2>{item.text}</h2><div className="answers">{item.options.map((o,i)=><button key={o} className={selected===i?`answer ${i===item.answer?'correct':'wrong'}`:'answer'} onClick={()=>choose(i)}>{o}<span>{selected!==null&&i===item.answer?'✓':selected===i?'×':''}</span></button>)}</div></div>
-  {selected!==null&&<div className="feedback"><CheckCircle2 size={20}/><div><b>{selected===item.answer?'Tepat!':'Teruskan belajar.'}</b><p>{item.explanation}</p></div></div>}
-  <button className="primary-btn next-btn" disabled={selected===null} onClick={next}><span>{q===questions.length-1?'Lihat Keputusan':'Soalan Seterusnya'} <ArrowRight size={19}/></span></button>
+  <div className="question-card"><span className="question-no">0{q+1}</span><h2>{item.text}</h2><div className="answers">{item.options.map((o,i)=><button key={o} className={selected===i?`answer ${i===item.answer?'correct':'wrong'}`:'answer'} onClick={()=>choose(i)}>{o}<span>{selected!==null&&i===item.answer?'✅':selected===i?'❌':''}</span></button>)}</div></div>
+  {selected!==null&&<div className="feedback"><span>💡</span><div><b>{selected===item.answer?'Tepat!':'Teruskan belajar.'}</b><p>{item.explanation}</p></div></div>}
+  <button className="primary-btn next-btn" disabled={selected===null} onClick={next}><span>{q===questions.length-1?'🏆 Lihat Keputusan':'➡️ Soalan Seterusnya'}</span></button>
  </div>
 }
 
 function Result({score,badge,restart,discover}:{score:number;badge:string;restart:()=>void;discover:()=>void}){
- return <div className="ia-page result-page"><div className="result-icon"><Award size={42}/></div><p className="ia-kicker">TAHNIAH!</p><h1>Anda mendapat<br/><em>{score}/{questions.length}</em></h1><div className="badge-card"><Trophy size={27}/><div><small>BADGE DITERIMA</small><strong>{badge}</strong></div></div><p className="result-copy">Teruskan meneroka. Lagi banyak anda kenal pasti keperluan dan sumber rasmi, lagi mudah anda mencari maklumat yang berkaitan.</p><button className="primary-btn" onClick={discover}><span><Search size={19}/> Teroka Inisiatif</span><ChevronRight/></button><button className="text-btn" onClick={restart}>Main semula</button></div>
+ return <div className="ia-page result-page"><div className="result-icon">🏆</div><p className="ia-kicker">TAHNIAH!</p><h1>Anda mendapat<br/><em>{score}/{questions.length}</em></h1><div className="badge-card"><span>🏅</span><div><small>BADGE DITERIMA</small><strong>{badge}</strong></div></div><p className="result-copy">Teruskan meneroka. Lagi banyak anda kenal pasti keperluan dan sumber rasmi, lagi mudah anda mencari maklumat yang berkaitan.</p><button className="primary-btn" onClick={discover}><span>🔎 Teroka Inisiatif</span><ChevronRight/></button><button className="text-btn" onClick={restart}>Main semula</button></div>
 }
 
 function Discover({profile,setProfile,search,setSearch,items,back}:{profile:string;setProfile:(x:string)=>void;search:string;setSearch:(x:string)=>void;items:Initiative[];back:()=>void}){
- return <div className="ia-page discover-page"><div className="quiz-top"><button className="back-btn" onClick={back}><ArrowLeft size={19}/></button><div><b>Teroka Inisiatif</b><small>Maklumat untuk anda</small></div></div><div className="search-box"><Search size={19}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Contoh: latihan, pelajar, usahawan..." /></div><div className="chips">{profiles.map(p=><button key={p} className={profile===p?'chip active':'chip'} onClick={()=>setProfile(p)}>{p}</button>)}</div><div className="initiative-list">{items.map(x=><article key={x.title} className="initiative-card"><span className="category">{x.category}</span><h3>{x.title}</h3><p>{x.description}</p><div className="tags">{x.tags.map(t=><span key={t}>{t}</span>)}</div><a href={x.link} target="_blank" rel="noreferrer">Semak sumber rasmi <ArrowRight size={16}/></a></article>)}</div>{items.length===0&&<div className="empty">Tiada padanan ditemui. Cuba kata kunci atau kategori lain.</div>}</div>
+ return <div className="ia-page discover-page"><div className="quiz-top"><button className="back-btn" onClick={back}>←</button><div><b>Teroka Inisiatif</b><small>Maklumat untuk anda</small></div></div><div className="search-box">🔎<input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Contoh: latihan, pelajar, usahawan..." /></div><div className="chips">{profiles.map(p=><button key={p} className={profile===p?'chip active':'chip'} onClick={()=>setProfile(p)}>{p}</button>)}</div><div className="initiative-list">{items.map(x=><article key={x.title} className="initiative-card"><span className="category">{x.category}</span><h3>{x.title}</h3><p>{x.description}</p><div className="tags">{x.tags.map(t=><span key={t}>{t}</span>)}</div><a href={x.link} target="_blank" rel="noreferrer">🔗 Semak sumber rasmi →</a></article>)}</div>{items.length===0&&<div className="empty">Tiada padanan ditemui. Cuba kata kunci atau kategori lain.</div>}</div>
 }
