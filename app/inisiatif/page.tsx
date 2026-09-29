@@ -3,7 +3,7 @@
 import './inisiatif.css'
 
 import { useMemo, useState } from 'react'
-import { ArrowLeft, ArrowRight, ChevronRight, Search } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 
 type Initiative = { title:string; category:string; description:string; tags:string[]; link:string }
 type Question = { text:string; options:string[]; answer:number; explanation:string }
@@ -26,7 +26,7 @@ const questions: Question[] = [
 const profiles=['Semua','Pelajar','Keluarga','Pekerja','Usahawan']
 
 export default function InisiatifApp(){
- const [screen,setScreen]=useState<'home'|'quiz'|'result'|'discover'>('home')
+ const [screen,setScreen]=useState<'home'|'quiz'|'result'|'discover'|'achievement'>('home')
  const [profile,setProfile]=useState('Semua')
  const [q,setQ]=useState(0)
  const [score,setScore]=useState(0)
@@ -46,6 +46,8 @@ export default function InisiatifApp(){
     {screen==='quiz' && <Quiz q={q} score={score} selected={selected} choose={choose} next={next}/>}
     {screen==='result' && <Result score={score} badge={badge} restart={startQuiz} discover={()=>setScreen('discover')}/>}
     {screen==='discover' && <Discover profile={profile} setProfile={setProfile} search={search} setSearch={setSearch} items={filtered} back={()=>setScreen('home')}/>}
+    {screen==='achievement' && <Achievement score={score} badge={badge} startQuiz={startQuiz}/>} 
+    <BottomNav screen={screen} go={(s)=>setScreen(s)} startQuiz={startQuiz}/>
    </div>
  </main>
 }
@@ -78,6 +80,14 @@ function Quiz({q,score,selected,choose,next}:{q:number;score:number;selected:num
 
 function Result({score,badge,restart,discover}:{score:number;badge:string;restart:()=>void;discover:()=>void}){
  return <div className="ia-page result-page"><div className="result-icon">🏆</div><p className="ia-kicker">TAHNIAH!</p><h1>Anda mendapat<br/><em>{score}/{questions.length}</em></h1><div className="badge-card"><span>🏅</span><div><small>BADGE DITERIMA</small><strong>{badge}</strong></div></div><p className="result-copy">Teruskan meneroka. Lagi banyak anda kenal pasti keperluan dan sumber rasmi, lagi mudah anda mencari maklumat yang berkaitan.</p><button className="primary-btn" onClick={discover}><span>🔎 Teroka Inisiatif</span><ChevronRight/></button><button className="text-btn" onClick={restart}>Main semula</button></div>
+}
+
+function Achievement({score,badge,startQuiz}:{score:number;badge:string;startQuiz:()=>void}){
+ return <div className="ia-page achievement-page"><div className="achievement-hero"><span>🏆</span><p className="ia-kicker">PENCAPAIAN ANDA</p><h1>Teruskan<br/><em>meneroka.</em></h1></div><div className="achievement-card"><div><small>SKOR TERKINI</small><strong>{score}/{questions.length}</strong></div><div><small>BADGE</small><strong>🏅 {badge}</strong></div></div><p className="result-copy">Lengkapkan kuiz dan terokai lebih banyak maklumat untuk membina pengetahuan anda tentang perkhidmatan serta inisiatif kerajaan.</p><button className="primary-btn" onClick={startQuiz}><span>🎯 Cuba Quiz Lagi</span><ChevronRight/></button></div>
+}
+
+function BottomNav({screen,go,startQuiz}:{screen:string;go:(s:'home'|'discover'|'achievement')=>void;startQuiz:()=>void}){
+ return <nav className="bottom-nav" aria-label="Navigasi utama"><button className={screen==='home'?'nav-item active':'nav-item'} onClick={()=>go('home')}><span>🏠</span><small>Utama</small></button><button className={screen==='discover'?'nav-item active':'nav-item'} onClick={()=>go('discover')}><span>🔎</span><small>Cari</small></button><button className={screen==='quiz'?'nav-item active quiz-nav':'nav-item quiz-nav'} onClick={startQuiz}><span>🎯</span><small>Quiz</small></button><button className={screen==='achievement'||screen==='result'?'nav-item active':'nav-item'} onClick={()=>go('achievement')}><span>🏆</span><small>Pencapaian</small></button></nav>
 }
 
 function Discover({profile,setProfile,search,setSearch,items,back}:{profile:string;setProfile:(x:string)=>void;search:string;setSearch:(x:string)=>void;items:Initiative[];back:()=>void}){
